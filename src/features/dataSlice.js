@@ -1,42 +1,43 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
-    objectId: 10245,
+    objectId: 10209,
     apiData: {}
 }
 
 export const dataSlice = createSlice({
-    name: 'data',
+    name: 'data', 
     initialState,
     reducers: {
         setData: (state, action) => {
-            return {...state, apiData : action.payload}
-        },
-        clearData: () => {
-            return initialState
-        },
-        inputId: (state, action) => {
-            return { ...state, objectId: action.payload }
+            return {...state, apiData: action.payload}
         },
         incrementId: (state) => {
-            return { ...state, objectId: state.objectId + 1 }
+            return {...state, objectId: state.objectId + 1}
         },
         decrementId: (state) => {
-            return { ...state, objectId: state.objectId - 1 }
+            return {...state, objectId: state.objectId - 1}
+        },
+        customId: (state, action) => {
+            return {...state, objectId: action.payload}
+        },
+        clearData: (state) => {
+            return initialState
         }
     }
 })
 
-export const { setData, clearData, incrementId, decrementId, inputId } = dataSlice.actions
-
 export const fetchData = () => {
-    const fetchDataThunk = async (dispatch, getState) => {
+    const dataThunk = async (dispatch, getState) => {
         let state = getState()
-        const response = await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${state.data.objectId}`)
-        const rData = await response.json()
-        dispatch(setData(rData))
+        const response = await fetch (`https://collectionapi.metmuseum.org/public/collection/v1/objects/${state.data.objectId}
+        `)
+        const responseData = await response.json()
+        dispatch(setData(responseData))
     }
-    return fetchDataThunk
+    return dataThunk
 }
+
+export const { setData, incrementId, decrementId, customId, clearData} = dataSlice.actions
 
 export default dataSlice.reducer
